@@ -1,0 +1,15 @@
+{
+  "name": "frontend-assessment-field-guide-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Assessment Room — a deterministic front-end reasoning lab: six stations that grade tracing, effects, tables, fetch semantics, metrics, and accessibility the way a technical assessment does.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node app/server.ts",
+    "test": "node --test \"test/*.test.ts\"",
+    "check": "npm test"
+  }
+}

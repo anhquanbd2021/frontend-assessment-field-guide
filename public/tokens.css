@@ -1,0 +1,75 @@
+/* tokens.css — direction "proctor-ink" (generated; do not hand-edit) */
+:root {
+  --font-heading: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.88rem);
+  --step-0: clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --step-2: clamp(1.4rem, 1.25rem + 0.75vw, 1.7rem);
+  --step-3: clamp(1.75rem, 1.5rem + 1.25vw, 2.3rem);
+  --step-4: clamp(2.2rem, 1.8rem + 2vw, 3.1rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-1: 0.375rem;
+  --radius-2: 0.625rem;
+  --radius-3: 1rem;
+
+  --accent-50: #fdf1ec;
+  --accent-100: #f9dcd2;
+  --accent-200: #f0b6a5;
+  --accent-300: #e38d75;
+  --accent-400: #d4674e;
+  --accent-500: #c24a33;
+  --accent-600: #a83a29;
+  --accent-700: #8a2f22;
+  --accent-800: #6e2620;
+  --accent-900: #571f1d;
+  --accent-950: #2e0e0d;
+
+  --pass-500: #2f7a4d;
+  --pass-600: #276b42;
+  --pass-100: #e2f2e8;
+
+  --color-bg: #faf5ea;
+  --color-surface: #fffdf7;
+  --color-sunken: #f1ead9;
+  --color-ink: #1e2637;
+  --color-muted: #5d6478;
+  --color-line: #e2d8c1;
+  --color-accent: var(--accent-600);
+  --color-accent-ink: #fdf1ec;
+  --color-pass: var(--pass-600);
+  --color-pass-soft: var(--pass-100);
+  --color-mark: #b0760f;
+  --color-mark-soft: #f8ecca;
+  --shadow-card: 0 1px 2px rgb(30 38 55 / 0.06), 0 8px 24px rgb(30 38 55 / 0.07);
+  --focus-ring: 0 0 0 3px var(--accent-200);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #151a24;
+    --color-surface: #1d2330;
+    --color-sunken: #11151d;
+    --color-ink: #ece7da;
+    --color-muted: #9aa3b6;
+    --color-line: #333b4d;
+    --color-accent: var(--accent-300);
+    --color-accent-ink: #2e0e0d;
+    --color-pass: #6fc08d;
+    --color-pass-soft: #1d3325;
+    --color-mark: #e0b354;
+    --color-mark-soft: #33290f;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px rgb(0 0 0 / 0.35);
+    --focus-ring: 0 0 0 3px var(--accent-700);
+  }
+}

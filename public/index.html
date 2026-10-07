@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Assessment Room — a deterministic front-end reasoning lab: six stations that grade tracing, effects, tables, fetch semantics, metrics, and accessibility the way a technical assessment does.">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf5ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151a24">
+  <title>Assessment Room — Front-End Reasoning Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/tokens.css">
+  <link rel="stylesheet" href="/styles.css">
+<!-- pb-shell --><link rel="stylesheet" href="./pb-shell.css"><!-- pb-shell --><!-- pb-back --><link rel="stylesheet" href="./pb-back.css"><!-- pb-back --></head>
+<body>
+<a class="skip-link" href="#main">Skip to lab</a>
+<main id="main">
+  <nav aria-label="Primary"><a aria-current="page" href="/">Lab</a><a href="/guide.html">Guide</a><a href="https://github.com/anhquanbd2021/frontend-assessment-field-guide">Source</a></nav>
+
+  <header class="hero">
+    <p class="eyebrow">Assessment Room · front-end reasoning lab</p>
+    <h1>Twenty stations.<br>One rubric.</h1>
+    <p class="lede">Each station hands you a broken or surprising snippet — the same families a front-end technical assessment grades: tracing, effects, big tables, fetch semantics, auth and security, metrics, accessibility, types. Run the trace, commit to an answer, then read the rubric a senior reviewer would apply. Ready for pressure? The timed run gives you 90 minutes across all twenty — the real assessment's format.</p>
+    <p class="warning"><strong>Educational simulation.</strong> Every trace is deterministic and runs against fixture data — no model calls, no real backend, nothing sent anywhere but this page.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="stations-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">The bench</p>
+        <h2 id="stations-title">Pick a station</h2>
+      </div>
+      <div class="button-row">
+        <button id="run" type="button">Run trace</button>
+        <button id="timed" type="button" class="secondary">Start timed run · 90:00</button>
+        <button id="reset" type="button" class="secondary">Reset session</button>
+        <span id="timer" class="timer" role="timer" hidden>90:00</span>
+      </div>
+    </div>
+    <div id="station-grid" class="station-grid" role="group" aria-label="Stations"></div>
+    <p class="status-line" id="run-status" role="status" aria-live="polite">Choose a station to load its scenario.</p>
+  </section>
+
+  <section class="workspace">
+    <section class="panel" aria-labelledby="scenario-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Scenario</p><h2 id="scenario-title">The code under review</h2></div>
+        <span id="area-badge" class="badge" role="status">—</span>
+      </div>
+      <pre id="scenario-code" aria-label="Scenario code">Select a station.</pre>
+      <p class="question" id="scenario-question"></p>
+      <h3 class="trace-heading">The trace</h3>
+      <ol id="trace-list" class="trace-list" aria-label="Execution trace"></ol>
+    </section>
+
+    <section class="panel" aria-labelledby="answer-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Your call</p><h2 id="answer-title">Commit to an answer</h2></div>
+        <span id="verdict-badge" class="badge" role="status">—</span>
+      </div>
+      <form id="answer-form">
+        <fieldset>
+          <legend class="muted" id="options-legend">Options load with the station.</legend>
+          <div id="option-list" class="option-list" role="radiogroup" aria-labelledby="options-legend"></div>
+        </fieldset>
+        <div class="button-row button-row-spaced">
+          <button id="submit" type="submit" disabled>Submit answer</button>
+        </div>
+      </form>
+      <div id="verdict-panel" class="verdict-panel" aria-live="polite">
+        <p id="verdict-text" class="muted">Verdict and explanation appear here.</p>
+        <pre id="fix-output" hidden></pre>
+        <dl id="rubric-list" class="rubric" hidden></dl>
+      </div>
+    </section>
+  </section>
+
+  <section class="panel" aria-labelledby="score-title">
+    <div class="section-heading">
+      <div><p class="eyebrow">Proctor's desk</p><h2 id="score-title">Session score</h2></div>
+      <span id="score-verdict" class="badge" role="status">—</span>
+    </div>
+    <div class="scoreboard">
+      <div class="score-meter" role="progressbar" aria-label="Correct answers" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" id="score-meter"><span id="score-meter-fill"></span></div>
+      <span class="score-text" id="score-text">0 / 20</span>
+    </div>
+    <p class="muted" id="score-note">The assessment grades reasoning, not recall — each rubric card names the assumption, the rejected options, the trade-off, and the user impact.</p>
+  </section>
+</main>
+<script type="module" src="/app.js"></script>
+<!-- pb-shell --><a class="pb-shell" href="https://github.com/anhquanbd2021/frontend-assessment-field-guide" title="frontend-assessment-field-guide — an Article Playbook demo (view source)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="2" fill="#2dd4bf"/><rect x="13" y="2" width="9" height="9" rx="2" fill="#2dd4bf" opacity=".45"/><rect x="2" y="13" width="9" height="9" rx="2" fill="#2dd4bf" opacity=".45"/><rect x="13" y="13" width="9" height="9" rx="4.5" fill="#2dd4bf"/></svg><b>frontend-assessment-field-guide</b><i>DEMO</i></a><!-- pb-shell --><!-- pb-back --><a class="pb-back" id="pb-back" href="https://github.com/anhquanbd2021/frontend-assessment-field-guide" title="Back to the article — frontend-assessment-field-guide">← Article <i>PLAYBOOK</i></a><script>(function(){var a=document.getElementById('pb-back');if(!a)return;var h=location.hostname;if(/^(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(h)){a.href='//'+h+':'+(/^(localhost|127\.0\.0\.1)$/.test(h)?'1234':'30082')+'/microsites/article.html?slug=frontend-assessment-field-guide';}})();</script><!-- pb-back --></body>
+</html>

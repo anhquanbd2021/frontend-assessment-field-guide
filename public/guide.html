@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Guide to the Assessment Room lab — what each station proves and the key detail a reviewer watches for.">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf5ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151a24">
+  <title>Guide — Assessment Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/tokens.css">
+  <link rel="stylesheet" href="/styles.css">
+<!-- pb-shell --><link rel="stylesheet" href="./pb-shell.css"><!-- pb-shell --><!-- pb-back --><link rel="stylesheet" href="./pb-back.css"><!-- pb-back --></head>
+<body>
+<a class="skip-link" href="#main">Skip to guide</a>
+<main id="main">
+  <nav aria-label="Primary"><a href="/">Lab</a><a aria-current="page" href="/guide.html">Guide</a><a href="https://github.com/anhquanbd2021/frontend-assessment-field-guide">Source</a></nav>
+
+  <header class="hero">
+    <p class="eyebrow">Guide · what the lab proves</p>
+    <h1>The reasoning is the test.</h1>
+    <p class="lede">Each station is one question family from a real front-end assessment brief. The lab's job is not to stump you — it is to make the graded reasoning visible: trace the state, name the assumption, price the trade-off, land on the user.</p>
+  </header>
+
+  <section class="guide-section" aria-labelledby="stations-guide">
+    <h2 id="stations-guide">The stations — first set</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Station 1</span><h3>The <code>var</code> loop</h3><p>Three timers, one shared binding — the canonical tracing trap.</p><dl><dt>Proves</dt><dd>You trace what state actually is, not what it should be.</dd><dt>Key detail</dt><dd><code>let</code> creates a per-iteration binding; <code>var</code> creates one for the whole function.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 2</span><h3>The stale effect</h3><p>An interval closes over a render snapshot and never sees fresh state.</p><dl><dt>Proves</dt><dd>Each render is a snapshot — callbacks read the values their render captured.</dd><dt>Key detail</dt><dd><code>setCount(c =&gt; c + 1)</code> reads current state at dispatch; a dep array rebuild works but costs a timer per tick.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 3</span><h3>The 50,000-row table</h3><p>Memoization cannot save a render that mounts half a million nodes.</p><dl><dt>Proves</dt><dd>Bound the rendered set first — paginate or virtualize — then optimize within it.</dd><dt>Key detail</dt><dd><code>React.memo</code> skips re-renders, not the first render; the DOM count is the freeze.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 4</span><h3><code>fetch</code> that "works"</h3><p>An HTTP 500 resolves — rejection is reserved for transport failure.</p><dl><dt>Proves</dt><dd>The error path is the graded path: <code>response.ok</code>, timeouts, retry only what is idempotent.</dd><dt>Key detail</dt><dd>The crash lands three lines away from the cause — on <code>data.rows</code> being undefined.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 5</span><h3>The sorted revenue column</h3><p>Default <code>sort()</code> compares strings — "10000" before "450".</p><dl><dt>Proves</dt><dd>Metrics must be believable: sort raw values, format only at display.</dd><dt>Key detail</dt><dd><code>Intl.NumberFormat</code> formats the view; the comparator sorts the numbers.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 6</span><h3>The div that looks like a button</h3><p>Pointer users see a button; keyboard users see nothing at all.</p><dl><dt>Proves</dt><dd>Accessibility is part of the rubric — semantics reach users that styling cannot.</dd><dt>Key detail</dt><dd><code>tabindex</code> + <code>role</code> + <code>keydown</code> is three patches to fake one <code>&lt;button&gt;</code>.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="stations2-guide">
+    <h2 id="stations2-guide">The stations — second set</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Station 7</span><h3>Microtasks beat timers</h3><p><code>console.log</code>, a <code>setTimeout</code>, and a <code>Promise.then</code> walk into an event loop.</p><dl><dt>Proves</dt><dd>The microtask queue drains completely before the next macrotask runs.</dd><dt>Key detail</dt><dd>a, d, c, b — sync code first, then promises, then timers.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 8</span><h3>The frozen <code>useMemo</code></h3><p>A dep array of <code>[]</code> caches the first computation forever.</p><dl><dt>Proves</dt><dd>Memoization is a contract: every value read inside must appear in the deps.</dd><dt>Key detail</dt><dd>Omitting <code>threshold</code> renders the stale filter — the same stale-closure family as Station 2.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 9</span><h3>The racy search</h3><p>Two fetches in flight; the slow one resolves last and wins.</p><dl><dt>Proves</dt><dd>Response order is not request order — cancellation or a staleness guard is structural, not optional.</dd><dt>Key detail</dt><dd><code>AbortController</code> in the effect's cleanup kills the older request before it can resolve.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 10</span><h3>The off-by-one day</h3><p><code>"2026-10-05"</code> parses as UTC midnight — New York is still on Oct 4.</p><dl><dt>Proves</dt><dd>Calendar dates and instants are different types wearing the same string.</dd><dt>Key detail</dt><dd>Parse date-only values as local (<code>new Date(y, m-1, d)</code>) or keep them strings end to end.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 11</span><h3>The focus that escapes</h3><p>A div modal opens over a page of links — Tab walks the page behind it.</p><dl><dt>Proves</dt><dd>Focus is never automatic: move it in on open, trap it while open, restore it on close.</dd><dt>Key detail</dt><dd><code>&lt;dialog&gt;</code> supplies all three natively — styling is the only real cost.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 12</span><h3>Props vs the snapshot</h3><p><code>useState(items)</code> reads the prop once and never again.</p><dl><dt>Proves</dt><dd>Copying props into state creates two sources of truth that silently diverge.</dd><dt>Key detail</dt><dd>Derive during render, or remount with a new <code>key</code> — never sync with an effect.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="stations3-guide">
+    <h2 id="stations3-guide">The stations — security &amp; types</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Station 13</span><h3>Token in <code>localStorage</code></h3><p>A JWT in web storage is one XSS away from a stolen session.</p><dl><dt>Proves</dt><dd>Every script on the origin can read localStorage — that is the whole blast radius.</dd><dt>Key detail</dt><dd><code>httpOnly</code> cookies hide from JS but invite CSRF — pick which door to lock, then lock it.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 14</span><h3>The comment that runs</h3><p><code>innerHTML</code> on user input is stored XSS with extra steps.</p><dl><dt>Proves</dt><dd><code>textContent</code> is free and absolute; markup needs a real sanitizer, never regex.</dd><dt>Key detail</dt><dd>React JSX escapes by default — the vulnerability is reaching for the escape hatch.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 15</span><h3>Index keys slide</h3><p>Delete row 0 and every surviving row inherits its neighbor's state.</p><dl><dt>Proves</dt><dd>Keys are identity — the array index is not one.</dd><dt>Key detail</dt><dd>Stateful rows (inputs, expansion) corrupted by index keys produce wrong-record writes.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 16</span><h3>Narrow the union</h3><p><code>string | number</code> only shares members both types have.</p><dl><dt>Proves</dt><dd><code>typeof</code> narrowing splits the union; <code>any</code> silences the compiler, not the bug.</dd><dt>Key detail</dt><dd>Strict TS turns "expected a number" runtime crashes into compile-time errors.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="stations4-guide">
+    <h2 id="stations4-guide">The stations — tracing &amp; polish</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Station 17</span><h3>The lost <code>this</code></h3><p><code>button.onclick = cart.add</code> detaches the method from its owner.</p><dl><dt>Proves</dt><dd><code>this</code> is bound by the call site, not the definition — extracting a method loses the receiver.</dd><dt>Key detail</dt><dd>Arrow wrappers capture the owner; <code>.bind()</code> locks it. The classic "works in console, broken in UI."</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 18</span><h3>The in-place sort</h3><p><code>rows.sort()</code> mutates the prop array the parent still owns.</p><dl><dt>Proves</dt><dd><code>sort()</code> returns the same array — mutation leaked across the component boundary.</dd><dt>Key detail</dt><dd><code>[...rows].sort()</code> or <code>toSorted()</code> — only mutate what you own.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 19</span><h3>The invisible zero</h3><p><code>count ? badge : empty</code> swallows a real <code>0</code>.</p><dl><dt>Proves</dt><dd>Falsy is not absent — <code>0</code> and <code>""</code> are values, only <code>null</code>/<code>undefined</code> mean missing.</dd><dt>Key detail</dt><dd><code>count != null</code> is the check that means what you intend.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Station 20</span><h3>The silent save</h3><p>A checkmark appears; the screen reader hears nothing.</p><dl><dt>Proves</dt><dd>DOM changes are invisible without a live region — <code>aria-live="polite"</code> announces async outcomes.</dd><dt>Key detail</dt><dd><code>polite</code> waits for a pause; <code>assertive</code> interrupts — reserve it for urgent results.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="tips-guide">
+    <h2 id="tips-guide">Assessment-day tips</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Timing</span><h3>Budget the 90 minutes</h3><p>Skim every scenario in the first five minutes, take the easiest station first, and reserve the last ten for review.</p><dl><dt>Proves</dt><dd>~15–25 minutes per scenario: 3 to read and trace, 10 to implement, 5 to write the reasoning.</dd><dt>Key detail</dt><dd>The reasoning write-up is graded — never leave it for "if there's time."</dd></dl></article>
+      <article class="panel control"><span class="control-number">Tracing</span><h3>Narrate, don't nod</h3><p>Write the trace even when the answer feels obvious — "all three callbacks share one var binding → 3, 3, 3" takes twenty seconds.</p><dl><dt>Proves</dt><dd>The method is the score; a right answer with no reasoning reads as a guess.</dd><dt>Key detail</dt><dd>Say what each line does to state, not what it "should" do.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Ambiguity</span><h3>State your assumption</h3><p>If the scenario doesn't say whether the API paginates or the field can be null, name your assumption and answer under it.</p><dl><dt>Proves</dt><dd>Ambiguity is deliberate — stating the assumption is itself scored.</dd><dt>Key detail</dt><dd>"Assuming X, I'd do Y because Z" covers assumption, decision, and trade-off in one line.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Review</span><h3>Bank the last ten minutes</h3><p>Re-read each answer for the four rubric lines: assumption, options, trade-off, user impact.</p><dl><dt>Proves</dt><dd>The cheapest points are the rubric lines you forgot to write down.</dd><dt>Key detail</dt><dd>Use this lab's timed run as rehearsal — 20 stations in 90:00, then review the misses.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="rubric-guide">
+    <h2 id="rubric-guide">The rubric card</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Frame</span><h3>Assumption → options → trade-off → user impact</h3><p>Every answered station reveals the four-part card a senior answer contains.</p><dl><dt>Proves</dt><dd>Assessments score the reasoning frame, not just the chosen option.</dd><dt>Key detail</dt><dd>Stating an assumption out loud is itself a scored behavior.</dd></dl></article>
+      <article class="panel control"><span class="control-number">Method</span><h3>Deterministic traces</h3><p>Run trace replays the same steps every time — the point is inspectability.</p><dl><dt>Proves</dt><dd>Bug hunting is a procedure: reproduce, isolate, one hypothesis, one change.</dd><dt>Key detail</dt><dd><code>/api/run</code> returns identical output for identical input — testable end to end.</dd></dl></article>
+    </div>
+  </section>
+
+  <section class="guide-section" aria-labelledby="api-guide">
+    <h2 id="api-guide">The API surface</h2>
+    <div class="control-grid">
+      <article class="panel control"><span class="control-number">Endpoints</span><h3>Inspect or drive it yourself</h3><p><code>GET /api/scenarios</code> lists stations · <code>GET /api/scenario?id=</code> returns one scenario without its grading key · <code>POST /api/run</code> replays a trace · <code>POST /api/answer</code> scores a choice and returns the rubric. <code>/health</code> and <code>/version</code> report the deploy.</p><dl><dt>Proves</dt><dd>The lab itself follows the API rules it teaches — explicit error JSON, bounded body size, no hidden state.</dd><dt>Key detail</dt><dd>Grading fields never ship in <code>/api/scenario</code> — they arrive only after you commit.</dd></dl></article>
+    </div>
+  </section>
+</main>
+<!-- pb-shell --><a class="pb-shell" href="https://github.com/anhquanbd2021/frontend-assessment-field-guide" title="frontend-assessment-field-guide — an Article Playbook demo (view source)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="2" fill="#2dd4bf"/><rect x="13" y="2" width="9" height="9" rx="2" fill="#2dd4bf" opacity=".45"/><rect x="2" y="13" width="9" height="9" rx="2" fill="#2dd4bf" opacity=".45"/><rect x="13" y="13" width="9" height="9" rx="4.5" fill="#2dd4bf"/></svg><b>frontend-assessment-field-guide</b><i>DEMO</i></a><!-- pb-shell --><!-- pb-back --><a class="pb-back" id="pb-back" href="https://github.com/anhquanbd2021/frontend-assessment-field-guide" title="Back to the article — frontend-assessment-field-guide">← Article <i>PLAYBOOK</i></a><script>(function(){var a=document.getElementById('pb-back');if(!a)return;var h=location.hostname;if(/^(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(h)){a.href='//'+h+':'+(/^(localhost|127\.0\.0\.1)$/.test(h)?'1234':'30082')+'/microsites/article.html?slug=frontend-assessment-field-guide';}})();</script><!-- pb-back --></body>
+</html>
